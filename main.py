@@ -4,7 +4,7 @@ import os
 import matplotlib.pyplot as plt
 from scipy import fftpack
 import seaborn as sns
-
+import numpy as np
 from sklearn.ensemble import IsolationForest
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.linear_model import LogisticRegression
@@ -27,12 +27,10 @@ class_names = ['normal', 'bearing fault', 'stator winding fault']
 num_classes = len(class_names)
 
 models = [ 
-
     ("GBM", GradientBoostingClassifier()),
-
     ("CatBoost", CatBoostClassifier(iterations=250, learning_rate=0.15, depth=15, loss_function='MultiClass')),
-
 ]
+
 
 accuracies = []
 f1_scores = []
@@ -45,10 +43,8 @@ results_dict = {
     "F1": [],
     "Precision": [],
     "Recall": [],
-
     "Accuracy_CV": [],
     "runtime": [],
-
 }
 
 results_root_dir = "../results/"
@@ -56,19 +52,19 @@ results_file = os.path.join(results_root_dir, "results.xlsx")
 
 dataset = pd.read_csv("../datasets/dataset.csv")
 
-X_train, X_test, y_train, y_test = train_test_split(dataset.iloc[:, 1:dataset.shape[1]],\
+X_train, X_test, y_train, y_test = train_test_split(dataset.iloc[:, 1:dataset.shape[1]], \
                                                     dataset["label"], test_size=0.20, random_state=42)
 
 for model_name, model in models:
     start_time = time.time()
     print("Running", model_name)
     model.fit(X_train, y_train)
-
+    
     cv_results = cross_val_score(model, X_train, y_train, cv=5, scoring='accuracy')
     mean_accuracy = cv_results.mean()
 
     y_pred = model.predict(X_test)
-    accuracy = accuracy_score(y_test, y_pred)                                  
+    accuracy = accuracy_score(y_test, y_pred) # Calculate accuracy and F1 score
     print(accuracy)
     precision = precision_score(y_test, y_pred,average=None)
     recall = recall_score(y_test, y_pred, average=None)
@@ -88,7 +84,7 @@ for model_name, model in models:
         for i in range(num_classes):
             fpr[i], tpr[i], _ = roc_curve(y_test == i, y_pred_proba[:, i])
             roc_auc[i] = auc(fpr[i], tpr[i])
-
+        
         plt.figure(figsize=(8, 6))
         colors = ['red', 'blue', 'green', 'orange', 'purple']
         for i, color in zip(range(num_classes), colors):
@@ -102,7 +98,7 @@ for model_name, model in models:
         plt.legend()
         plt.savefig(fname=os.path.join(results_dir, model_name + "_ROC.png"))
         plt.close()
-
+    
     conf_matrix = confusion_matrix(y_test, y_pred)
 
     plt.figure(figsize=(8, 6))
@@ -119,6 +115,7 @@ for model_name, model in models:
     results_dict["Precision"].append(precision.mean())
     results_dict["Recall"].append(recall.mean())
     results_dict["Accuracy_CV"].append(mean_accuracy)
+    
 
     model_time = time.time()
     model_time -= start_time
@@ -136,3 +133,5 @@ execution_time = end_time - start_time
 execution_time /= 60
 print("Modelling Completed")
 print("Total execution time: {:.2f} minutes".format(execution_time))
+
+

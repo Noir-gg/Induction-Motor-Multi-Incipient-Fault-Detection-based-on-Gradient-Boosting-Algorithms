@@ -14,7 +14,6 @@ def detailed_approximate_coefficients(current, wavelet_type, degree_of_transform
 
     wavelet = wavelet_type + str(degree_of_transform)
     _, cD_data = pywt.dwt(current, wavelet=wavelet)
-
     return np.array(cD_data)
 
 class_0_data = dataset[dataset['label'] == 0] 
