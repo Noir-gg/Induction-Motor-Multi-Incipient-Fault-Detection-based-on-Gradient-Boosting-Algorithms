@@ -3,7 +3,7 @@
 The repository accompanies our publication and demonstrates how to fuse traditional signal‑processing with modern boosting algorithms for reliable detection of **bearing** and **stator‑winding** faults from stator‑current measurements.
 
 ## Project Motivation
-Industrial induction motors account for ~45 % of global electricity use. Early fault detection prevents unplanned downtime and energy waste. Recent studies show ensemble tree‑based learners achieve state‑of‑the‑art accuracy on noisy current signatures citeturn7search0turn7search6turn9search1.
+Industrial induction motors account for ~45 % of global electricity use. Early fault detection prevents unplanned downtime and energy waste. Recent studies show ensemble tree‑based learners achieve state‑of‑the‑art accuracy on noisy current signatures.
 
 ## Repository Structure
 | File | Purpose |
