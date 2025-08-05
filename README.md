@@ -1,4 +1,4 @@
-**“Induction-Motor-Multi-Incipient-Fault-Detection-based-on-Gradient-Boosting-Algorithms** (IEEE Transactions on Industrial Electronics, 2025).
+# **Induction-Motor-Multi-Incipient-Fault-Detection-based-on-Gradient-Boosting-Algorithms** (IEEE Transactions on Industrial Electronics, 2025).
 
 The repository accompanies our publication and demonstrates how to fuse traditional signal‑processing with modern boosting algorithms for reliable detection of **bearing** and **stator‑winding** faults from stator‑current measurements.
 
