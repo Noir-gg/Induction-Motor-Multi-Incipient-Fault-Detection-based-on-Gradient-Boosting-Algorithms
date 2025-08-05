@@ -5,7 +5,7 @@ This repository contains a complete reproducible pipeline for early detection of
 
 ## Code structure
 * `feature_extraction.py`  
-  Reads raw phase‑current samples, balances the dataset with SMOTE, derives first‑order statistics, and saves the feature table.
+  Reads raw phase‑current samples from a .csv file with three columns for three phases, balances the dataset with SMOTE for all classes, derives first‑order statistics, and saves the feature table.
 * `feature_extraction_wavelet.py`  
   Generates wavelet coefficients, selects the most informative ones with mutual information, and produces an alternative feature table.
 * `gridsearch.py`  
