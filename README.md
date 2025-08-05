@@ -1,4 +1,4 @@
-# Motor Fault Diagnosis via Hybrid Feature Extraction and Ensemble Learning
+# Incipient Stator Winding Fault Detection and Severity Estimation in Induction Motors With Unsupervised Machine Learning Algorithms
 
 This repository provides an end‑to‑end Python pipeline for detecting **bearing** and **stator‑winding** faults in three‑phase induction motors using stator‑current signals.
 
