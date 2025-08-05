@@ -1,7 +1,7 @@
-# Induction-Motor-Multi-Incipient-Fault-Detection-based-on-Gradient-Boosting-Algorithms
+# This is the code for the paper 'Induction-Motor-Multi-Incipient-Fault-Detection-based-on-Gradient-Boosting-Algorithms'
 
 ## Project overview
-This repository contains a complete reproducible pipeline for Induction Motor Multi Incipient Fault Detection based on Gradient Boosting Algorithms. The workflow follows the experimental methodology described in the paper and demonstrates how current signals are converted into statistical features, balanced, and classified.
+This repository contains a complete reproducible pipeline for early detection of bearing and stator‐winding faults in three‑phase induction motors using gradient boosting machine algorithms. The workflow follows the experimental methodology described in the paper and demonstrates how current signals are converted into statistical features, balanced, and classified.
 
 ## Code structure
 * `feature_extraction.py`  
@@ -63,5 +63,10 @@ python main.py
 ```
 Replace the dataset paths as needed.
 
+## Citation
+
+If you find this repository useful, please cite the original article:
+
+> R. Hussain, M. AlShaikh Saleh, and S. S. Refaat, "Induction Motor Multi Incipient Fault Detection based on Gradient Boosting Algorithms," *Proceedings of the 50th Annual Conference of the IEEE Industrial Electronics Society (IECON 2024)*, Chicago, USA, 2024, doi: 10.1109/IECON55916.2024.10905593.
+
 ## Licence
-MIT
