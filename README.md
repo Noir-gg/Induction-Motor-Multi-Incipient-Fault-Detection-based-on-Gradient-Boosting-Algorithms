@@ -69,4 +69,3 @@ If you find this repository useful, please cite the original article:
 
 > R. Hussain, M. AlShaikh Saleh, and S. S. Refaat, "Induction Motor Multi Incipient Fault Detection based on Gradient Boosting Algorithms," *Proceedings of the 50th Annual Conference of the IEEE Industrial Electronics Society (IECON 2024)*, Chicago, USA, 2024, doi: 10.1109/IECON55916.2024.10905593.
 
-## Licence
