@@ -10,7 +10,7 @@ from imblearn.under_sampling import RandomUnderSampler
 def apply_smote(dataset):
     smote_columns = ['Phase A', 'Phase B', 'Phase C']
     X = dataset[smote_columns].values
-    y = dataset['label'].values                                                       
+    y = dataset['label'].values  # Assuming 'target' is the name of your target column
     X_resampled, y_resampled = smote.fit_resample(X, y)
     resampled_df = pd.DataFrame(X_resampled, columns=smote_columns)
     resampled_df['label'] = y_resampled
@@ -18,6 +18,16 @@ def apply_smote(dataset):
     resampled_df = resampled_df[cols]
     resampled_df = resampled_df.sort_values(by='label')
     return resampled_df
+
+    
+    
+    
+    
+    
+    
+
+
+
 
 smote = SMOTE()
 
@@ -40,9 +50,8 @@ fft_C = []
 length = dataset_resampled.shape[0]
 
 for index, row in dataset_resampled.drop("label", axis=1).iterrows():
-
     skew_values.append(row.skew())
-
+    
     covariance_values.append(row.cov(dataset_resampled.drop("label", axis=1).iloc[index]))
 
     mean_values.append(pd.Series(row).mean())
@@ -50,6 +59,8 @@ for index, row in dataset_resampled.drop("label", axis=1).iterrows():
     std_deviation_values.append(pd.Series(row).std())
     print(length)
     length -= 1
+
+
 
 dataset_resampled['skew'] = skew_values
 dataset_resampled['covariance'] = covariance_values

@@ -26,12 +26,12 @@ rf_n = [220, 225, 230]
 rf_max = [11, 13, 15]
 rf_min_samples_leaf = [1,2,3]
 
+
 gbm_n = [200]
 gbm_max = [7]
 
 gbm_loss = ['log_loss', 'exponential']
 gbm_criterion = ["friedman_mse", "squared_error"]
-
 gbm_lr = [1]
 gbm_max_features = ['sqrt', 'log2']
 
@@ -43,13 +43,12 @@ import time
 
 start_time = time.time()
 models = [
-
     ("cB",CatBoostClassifier(), {'iterations': [200, 250],'learning_rate': [0.15],'depth': [10,15,20]}),
 
 ]
 
 dataset = pd.read_csv("../datasets/dataset.csv")
-X_train, X_test, y_train, y_test = train_test_split(dataset.iloc[:, 1:dataset.shape[1]],\
+X_train, X_test, y_train, y_test = train_test_split(dataset.iloc[:, 1:dataset.shape[1]], \
                                                     dataset["label"], test_size=0.20, random_state=42)
 
 best_models = {}
@@ -58,9 +57,9 @@ results = []
 for name, model, params in models:
     print(f"Performing grid search for {name}...")
     grid_search = GridSearchCV(model, params, cv=5, scoring='accuracy')
-    grid_search.fit(X_train, y_train)                                                 
+    grid_search.fit(X_train, y_train)  # Assuming you have X_train and y_train defined
     best_models[name] = grid_search.best_estimator_
-
+    
     results.append({
         'Model': name,
         'Best Parameters': grid_search.best_params_,

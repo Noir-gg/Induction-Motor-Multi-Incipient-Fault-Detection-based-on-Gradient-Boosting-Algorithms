@@ -1,63 +1,67 @@
-# **Induction-Motor-Multi-Incipient-Fault-Detection-based-on-Gradient-Boosting-Algorithms** (IEEE Transactions on Industrial Electronics, 2025).
+# This is the code for the paper 'Induction-Motor-Multi-Incipient-Fault-Detection-based-on-Gradient-Boosting-Algorithms'
 
-The repository accompanies our publication and demonstrates how to fuse traditional signal‑processing with modern boosting algorithms for reliable detection of **bearing** and **stator‑winding** faults from stator‑current measurements.
+## Project overview
+This repository contains a complete reproducible pipeline for early detection of bearing and stator‐winding faults in three‑phase induction motors using gradient boosting machine algorithms. The workflow follows the experimental methodology described in the paper and demonstrates how current signals are converted into statistical features, balanced, and classified.
 
-## Project Motivation
-Industrial induction motors account for ~45 % of global electricity use. Early fault detection prevents unplanned downtime and energy waste. Recent studies show ensemble tree‑based learners achieve state‑of‑the‑art accuracy on noisy current signatures.
+## Code structure
+* `feature_extraction.py`  
+  Reads raw phase‑current samples, balances the dataset with SMOTE, derives first‑order statistics, and saves the feature table.
+* `feature_extraction_wavelet.py`  
+  Generates wavelet coefficients, selects the most informative ones with mutual information, and produces an alternative feature table.
+* `gridsearch.py`  
+  Performs exhaustive hyper‑parameter tuning for each candidate model and stores the scores.
+* `main.py`  
+  Trains the chosen classifiers, reports metrics, and automatically plots confusion matrices and ROC curves.
+* `testing.py`  
+  Utility script for quick visual sanity checks of the processed features.
 
-## Repository Structure
-| File | Purpose |
-|------|---------|
-| `feature_extraction.py` | Statistical descriptors + SMOTE balancing |
-| `feature_extraction_wavelet.py` | Multi‑family wavelet packet energy features |
-| `gridsearch.py` | Hyper‑parameter optimisation across CatBoost, LGBM, GBM, KNN |
-| `main.py` | Training, 5‑fold CV, plots |
-| `testing.py` | Quick sanity checks & exploratory plots |
+All scripts assume the presence of a `datasets` folder (not included) with the three raw Excel files described in the paper.
 
-## Data Flow
-1. **Input** – `.xlsx` sheets of phase‑current time‑series  
-2. **Pre‑processing** – SMOTE to fix class imbalance → 72 k samples/class  
-3. **Feature Banks**  
-   * 24 statistical features (time/FFT domain)  
-   * 72 wavelet‑packet energies (3 families × 4 levels)  
-4. **Model Selection** – Grid‑search over CatBoost, LightGBM, scikit‑GBM, KNN  
-5. **Training & Evaluation** – 5‑fold CV, confusion matrices, ROC‑AUC plots  
-6. **Outputs** – CSV metrics, trained models (`joblib`), PNG figures
+## Dataflow
+1. Raw phase‑current measurements collected at 12 kHz for normal, bearing‑fault, and stator‑winding‑fault conditions.
+2. Synthetic Minority Over‑sampling Technique (SMOTE) to equalise class distribution.
+3. Feature extraction: mean, variance, standard deviation, skew, covariance and optional wavelet detail coefficients.
+4. Train‑test split followed by 5‑fold cross‑validation.
+5. Model training and evaluation with Gradient Boosting, CatBoost, LightGBM, XGBoost, Random Forest, and K‑Nearest Neighbours.
+6. Metric reporting and figure export.
 
 ## Results
-The table summarises the hold‑out test performance; values match Figure 4 and Table III of the paper.
+The table below reproduces the main findings of the paper after grid search and 5‑fold cross‑validation on the statistical‑feature dataset.
 
-| Model                       |   Accuracy |   Macro AUC | Key Observation                                            |
-|:----------------------------|-----------:|------------:|:-----------------------------------------------------------|
-| CatBoost                    |      0.932 |       0.990 | Highest recall; misclassifies fewest healthy/bearing cases |
-| LightGBM                    |      0.920 |       0.980 | Competitive but more normal→stator confusions              |
-| Gradient Boosting (sklearn) |      0.872 |       0.950 | Struggles with stator faults; lower overall accuracy       |
-| K‑Nearest Neighbour         |      0.870 |       0.940 | Baseline; limited separation of stator faults              |
+| Model | Accuracy | Precision | Recall | F1 | Runtime (min) |
+| --- | --- | --- | --- | --- | --- |
+| Random Forest | 0.94 | 0.94 | 0.94 | 0.94 | 45.0 |
+| XGBoost | 0.94 | 0.93 | 0.93 | 0.93 | 4.9 |
+| LightGBM | 0.92 | 0.92 | 0.92 | 0.92 | 0.35 |
+| CatBoost | 0.93 | 0.93 | 0.93 | 0.93 | 460.7 |
+| Gradient Boosting (sklearn) | 0.87 | 0.87 | 0.87 | 0.87 | 118 |
+| KNN | 0.87 | 0.87 | 0.86 | 0.86 | 1.6 |
 
+### Confusion matrices
+![Random Forest Confusion Matrix](images/rf_confusion_matrix.png)
+![XGBoost Confusion Matrix](images/xgb_confusion_matrix.png)
 
-* **CatBoost** delivered the best macro‑AUC (≈ 0.99) and the lowest false‑negative rate on bearing faults, corroborating recent literature where CatBoost reached perfect bearing‑fault separation under comparable settings citeturn8view0.
-* **LightGBM** ran ~35 % faster per epoch thanks to histogram sampling while maintaining 0.98 macro‑AUC, echoing reports of SHAP‑optimised LGBM hitting 0.95–0.96 accuracy on power‑equipment failures citeturn10view0.
-* Classical **GradientBoosting (sklearn)** and **KNN** baselines trailed behind; their poorer stator‑fault recall mirrors observations in broader surveys comparing boosting and distance‑based classifiers for motor diagnostics citeturn7search10turn9search9.
+### ROC curves
+![Random Forest ROC](images/rf_roc.png)
+![XGBoost ROC](images/xgb_roc.png)
 
-## How to Reproduce
-```bash
+The ROC curves show near‑perfect separability with area under the curve values close to 1.0 for all three classes, confirming that current‑signal statistics carry sufficient information for reliable fault discrimination.
+
+## Inputs and outputs
+* **Input**: Three‑phase stator currents in CSV/Excel format.
+* **Output**:  
+  * `datasets/dataset.csv` – balanced statistical feature table  
+  * Trained model objects (optional, via joblib)  
+  * Figures in `results/<model>`  
+  * Metric CSV files in `results/metrics`
+
+## How to reproduce
+```
 pip install -r requirements.txt
 python feature_extraction.py
-python feature_extraction_wavelet.py
-python gridsearch.py
 python main.py
 ```
-The trained models and figures appear in `results/`. Refer to the paper for hyper‑parameter grids and dataset acquisition protocol.
+Replace the dataset paths as needed.
 
-## Citation
-Please cite our work if you use this repository:
-
-```bibtex
-@article{hussain2025fault,
-  title     = {Hybrid Feature Extraction and Ensemble Learning for Induction‑Motor Fault Diagnosis},
-  author    = {Rehaan Hussain and Sunil Khatri},
-  journal   = {IEEE Transactions on Industrial Electronics},
-  year      = {2025},
-  doi       = {10.1109/TIE.2025.11027235}
-}
-```
+## Licence
+MIT
